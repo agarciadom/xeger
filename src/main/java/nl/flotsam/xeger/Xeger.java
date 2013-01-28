@@ -1,5 +1,6 @@
 /**
  * Copyright 2009 Wilfred Springer
+ * Copyright 2012 Jason Pell
  * Copyright 2013 Antonio García-Domínguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,7 +66,7 @@ public class Xeger {
     }
 
     private void generate(StringBuilder builder, State state) {
-        List<Transition> transitions = state.getSortedTransitions(true);
+        List<Transition> transitions = state.getSortedTransitions(false);
         if (transitions.size() == 0) {
             assert state.isAccept();
             return;
