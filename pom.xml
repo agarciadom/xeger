@@ -3,7 +3,7 @@
     <groupId>nl.flotsam</groupId>
     <artifactId>xeger</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Exreg</name>
+    <name>Xeger</name>
     <description>
         Small library, producing random text matching arbitrary regular expressions.
     </description>
@@ -12,7 +12,19 @@
             <id>wilfred.springer</id>
             <name>Wilfred Springer</name>
         </developer>
+        <developer>
+            <id>bluezio</id>
+            <name>Antonio García</name>
+        </developer>
     </developers>
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -33,9 +45,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>dk.brics</groupId>
+            <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
-            <version>1.11</version>
+            <version>1.11-8</version>
         </dependency>
     </dependencies>
     <build>
@@ -43,6 +55,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
