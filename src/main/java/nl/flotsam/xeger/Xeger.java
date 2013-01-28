@@ -30,7 +30,7 @@ import java.util.List;
 public class Xeger {
 
     private final Automaton automaton;
-    private final Random random;
+    private Random random;
 
     /**
      * Constructs a new instance, accepting the regular expression and the randomizer.
@@ -85,4 +85,11 @@ public class Xeger {
         builder.append(c);
     }
 
+	public Random getRandom() {
+		return random;
+	}
+
+	public void setRandom(Random random) {
+		this.random = random;
+	}
 }
