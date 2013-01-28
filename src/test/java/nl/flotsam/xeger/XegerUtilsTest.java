@@ -15,12 +15,12 @@
  */
 package nl.flotsam.xeger;
 
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
-import org.hamcrest.Matchers;
-import dk.brics.automaton.RegExp;
 
 import java.util.Random;
+
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 public class XegerUtilsTest {
 
@@ -28,7 +28,7 @@ public class XegerUtilsTest {
     public void shouldGenerateRandomNumberCorrectly() {
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            int number = XegerUtils.getRandomInt(3, 7, random);
+            int number = Xeger.getRandomInt(3, 7, random);
             assertThat(number, Matchers.greaterThanOrEqualTo(3));
             assertThat(number, Matchers.lessThanOrEqualTo(7));
         }

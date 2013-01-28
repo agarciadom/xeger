@@ -1,5 +1,6 @@
 /**
  * Copyright 2009 Wilfred Springer
+ * Copyright 2013 Antonio García-Domínguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +16,13 @@
  */
 package nl.flotsam.xeger;
 
+import java.util.List;
+import java.util.Random;
+
 import dk.brics.automaton.Automaton;
+import dk.brics.automaton.RegExp;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
-import dk.brics.automaton.RegExp;
-
-import java.util.Random;
-import java.util.List;
 
 /**
  * An object that will generate text from a regular expression. In a way, it's the opposite of a regular expression
@@ -70,7 +71,7 @@ public class Xeger {
             return;
         }
         int nroptions = state.isAccept() ? transitions.size() : transitions.size() - 1;
-        int option = XegerUtils.getRandomInt(0, nroptions, random);
+        int option = Xeger.getRandomInt(0, nroptions, random);
         if (state.isAccept() && option == 0) {          // 0 is considered stop
             return;
         }
@@ -81,7 +82,7 @@ public class Xeger {
     }
 
     private void appendChoice(StringBuilder builder, Transition transition) {
-        char c = (char) XegerUtils.getRandomInt(transition.getMin(), transition.getMax(), random);
+        char c = (char) Xeger.getRandomInt(transition.getMin(), transition.getMax(), random);
         builder.append(c);
     }
 
@@ -91,5 +92,19 @@ public class Xeger {
 
 	public void setRandom(Random random) {
 		this.random = random;
+	}
+
+	/**
+	 * Generates a random number within the given bounds.
+	 *
+	 * @param min The minimum number (inclusive).
+	 * @param max The maximum number (inclusive).
+	 * @param random The object used as the randomizer.
+	 * @return A random number in the given range.
+	 */
+	static int getRandomInt(int min, int max, Random random) {
+		// Use random.nextInt as it guarantees a uniform distribution
+		int maxForRandom=max-min+1;
+		return random.nextInt(maxForRandom) + min;
 	}
 }
