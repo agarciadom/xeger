@@ -1,5 +1,7 @@
 /**
  * Copyright 2009 Wilfred Springer
+ * Copyright 2012 Jason Pell
+ * Copyright 2013 Antonio García-Domínguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
