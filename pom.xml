@@ -7,6 +7,9 @@
     <description>
         Small library, producing random text matching arbitrary regular expressions.
     </description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <developers>
         <developer>
             <id>wilfred.springer</id>
@@ -53,6 +56,23 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <!-- We only want to use the OSGi manifest for the main JAR -->
+                        <id>default-jar</id>
+                        <configuration>
+                            <archive>
+                                <!-- Use the OSGi manifest -->
+                                <manifestFile>${project.build.directory}/osgi/MANIFEST.MF</manifestFile>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
@@ -61,6 +81,7 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
@@ -103,6 +124,32 @@
                         <goals><goal>jar</goal></goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Make main .jar OSGi-compatible -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.7</version>
+                <extensions>true</extensions>
+
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals><goal>manifest</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive><forced>true</forced></archive>
+                    <excludeDependencies>true</excludeDependencies>
+                    <manifestLocation>${project.build.directory}/osgi</manifestLocation>
+                    <instructions>
+                        <_nouses>true</_nouses>
+                        <Bundle-Version>$(replace;${project.version};-SNAPSHOT;.$(tstamp))</Bundle-Version>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
