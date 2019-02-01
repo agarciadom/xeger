@@ -68,3 +68,21 @@ simpleexp       ::=     charexp
 |       <n-m>   (numerical interval)    [OPTIONAL]
 charexp ::=     <Unicode character>     (a single non-reserved character)       
 |       \ <Unicode character>   (a single character)
+
+Maven repository
+---
+
+A binary build of this library is available from my Maven Bintray repository:
+
+```xml
+<repositories>
+  <repository>
+    <snapshots>
+      <enabled>false</enabled>
+    </snapshots>
+    <id>bintray-bluezio-maven</id>
+    <name>bintray</name>
+    <url>https://dl.bintray.com/bluezio/maven</url>
+  </repository>
+</repositories>
+```
