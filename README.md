@@ -33,6 +33,7 @@ Xeger does not support all valid Java regular expressions. The full
 set of what is defined here and is summarized below. Future versions
 might support a more complete set, in case of popular demand.
 
+```
 regexp  ::=     unionexp                
 |                       
 unionexp        ::=     interexp | unionexp     (union) 
@@ -68,6 +69,7 @@ simpleexp       ::=     charexp
 |       <n-m>   (numerical interval)    [OPTIONAL]
 charexp ::=     <Unicode character>     (a single non-reserved character)       
 |       \ <Unicode character>   (a single character)
+```
 
 Maven repository
 ---
