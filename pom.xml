@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.flotsam</groupId>
     <artifactId>xeger</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>Xeger</name>
     <description>
         Small library, producing random text matching arbitrary regular expressions.
