@@ -18,7 +18,9 @@
 package nl.flotsam.xeger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
@@ -30,6 +32,12 @@ import dk.brics.automaton.Transition;
  * matcher: an instance of this class will produce text that is guaranteed to match the regular expression passed in.
  */
 public class Xeger {
+
+    public static class FailedRandomWalkException extends Exception {
+        public FailedRandomWalkException(String message) {
+            super(message);
+        }
+    }
 
     private final Automaton automaton;
     private Random random;
@@ -65,6 +73,99 @@ public class Xeger {
         return builder.toString();
     }
 
+    /**
+     * Attempts to generate a random String using a random walk of length between <code>minLength</code> and
+     * <code>maxLength</code> steps.
+     *
+     * A target length will be randomly generated within this range, and a random walk of at least that length
+     * will be attempted. The walk will initially avoid states with no outgoing transitions until the target
+     * length is reached: from then onwards, it will consider all transitions equally, and stop as soon as an
+     * accept state has been reached or the maximum walk length has been exceeded. If the minimum length is not
+     * reached or the maximum walk length has been exceeded, a {@link FailedRandomWalkException} exception will
+     * be thrown. Callers could catch this exception to try again if desired.
+     *
+     * @param minLength Minimum length for the range.
+     * @param maxLength Maximum length for the range.
+     * @throws FailedRandomWalkException The minimum random walk length was not reached, or the maximum random walk
+     * length was exceeded.
+     */
+    public String generate(int minLength, int maxLength) throws FailedRandomWalkException {
+        final StringBuilder builder = new StringBuilder();
+        int walkLength = 0;
+        State state = automaton.getInitialState();
+
+        // First get to the uniformly distributed target length
+        final int targetLength = Xeger.getRandomInt(minLength, maxLength, random);
+        while (walkLength < targetLength) {
+            List<Transition> transitions = state.getSortedTransitions(false);
+            if (transitions.size() == 0) {
+                if (walkLength >= minLength) {
+                    assert state.isAccept();
+                    return builder.toString();
+                } else {
+                    throw new FailedRandomWalkException(String.format(
+                            "Reached accept state before minimum length (current = %d < min = %d)",
+                            walkLength, minLength));
+                }
+            }
+
+            // Try to prefer non-final transitions if possible at this first stage
+            List<Transition> nonFinalTransitions = transitions.stream()
+                    .filter(t -> !t.getDest().getTransitions().isEmpty()).collect(Collectors.toList());
+            if (!nonFinalTransitions.isEmpty()) {
+                transitions = nonFinalTransitions;
+            }
+
+            final int option = Xeger.getRandomInt(0, transitions.size() - 1, random);
+            final Transition transition = transitions.get(option);
+            appendChoice(builder, transition);
+            state = transition.getDest();
+            ++walkLength;
+        }
+
+        // Now, get to an accept state
+        while (!state.isAccept() && walkLength < maxLength) {
+            List<Transition> transitions = state.getSortedTransitions(false);
+            if (transitions.size() == 0) {
+               assert state.isAccept();
+               return builder.toString();
+            }
+
+            final int option = Xeger.getRandomInt(0, transitions.size() - 1, random);
+            final Transition transition = transitions.get(option);
+            appendChoice(builder, transition);
+            state = transition.getDest();
+            ++walkLength;
+        }
+
+        if (state.isAccept()) {
+            return builder.toString();
+        } else {
+            throw new FailedRandomWalkException(String.format(
+                    "Exceeded maximum walk length (%d) before reaching an accept state: " +
+                            "target length was %d (min length = %d)",
+                    maxLength, targetLength, minLength));
+        }
+    }
+
+    private Optional<Transition> appendRandomChoice(StringBuilder builder, State state, int minLength, int walkLength) throws FailedRandomWalkException {
+        List<Transition> transitions = state.getSortedTransitions(false);
+        if (transitions.size() == 0) {
+            if (walkLength >= minLength) {
+                return Optional.empty();
+            } else {
+                throw new FailedRandomWalkException(String.format(
+                        "Reached accept state before minimum length (current = %d < min = %d)",
+                        walkLength, minLength));
+            }
+        }
+
+        final int option = Xeger.getRandomInt(0, transitions.size() - 1, random);
+        final Transition transition = transitions.get(option);
+        appendChoice(builder, transition);
+        return Optional.of(transition);
+    }
+
     private void generate(StringBuilder builder, State state) {
         List<Transition> transitions = state.getSortedTransitions(false);
         if (transitions.size() == 0) {
@@ -87,25 +188,25 @@ public class Xeger {
         builder.append(c);
     }
 
-	public Random getRandom() {
-		return random;
-	}
+    public Random getRandom() {
+        return random;
+    }
 
-	public void setRandom(Random random) {
-		this.random = random;
-	}
+    public void setRandom(Random random) {
+        this.random = random;
+    }
 
-	/**
-	 * Generates a random number within the given bounds.
-	 *
-	 * @param min The minimum number (inclusive).
-	 * @param max The maximum number (inclusive).
-	 * @param random The object used as the randomizer.
-	 * @return A random number in the given range.
-	 */
-	static int getRandomInt(int min, int max, Random random) {
-		// Use random.nextInt as it guarantees a uniform distribution
-		int maxForRandom=max-min+1;
-		return random.nextInt(maxForRandom) + min;
-	}
+    /**
+     * Generates a random number within the given bounds.
+     *
+     * @param min The minimum number (inclusive).
+     * @param max The maximum number (inclusive).
+     * @param random The object used as the randomizer.
+     * @return A random number in the given range.
+     */
+    static int getRandomInt(int min, int max, Random random) {
+        // Use random.nextInt as it guarantees a uniform distribution
+        int maxForRandom = max - min + 1;
+        return random.nextInt(maxForRandom) + min;
+    }
 }

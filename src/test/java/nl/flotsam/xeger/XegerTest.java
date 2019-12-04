@@ -47,10 +47,39 @@ public class XegerTest {
 			List<String> firstRegexList = generateRegex(generator, 100);
 			List<String> secondRegexList = generateRegex(generator2, 100);
 
-			for (int i = 0; i < firstRegexList.size(); i++) {
-				assertEquals("Index mismatch: " + i, firstRegexList.get(i),
-						secondRegexList.get(i));
+			assertListEquals(firstRegexList, secondRegexList);
+		}
+	}
+
+	@Test
+	public void testWalkRange() throws Exception {
+		for (int x = 0; x < 100; x++) {
+			Xeger generator = new Xeger("[ab]{0,100}c", new Random(1000));
+			Xeger generator2 = new Xeger("[ab]{0,100}c", new Random(1000));
+
+			List<String> firstRegexList = generateRegex(generator, 100, 0, 100);
+			List<String> secondRegexList = generateRegex(generator2, 100, 0, 100);
+			assertListEquals(firstRegexList, secondRegexList);
+		}
+	}
+
+	private List<String> generateRegex(Xeger generator, int count, int minLength, int maxLength) throws Xeger.FailedRandomWalkException {
+		List<String> regexList = new ArrayList<>();
+		for (int i = 0; i < count; i++) {
+			try {
+				regexList.add(generator.generate(minLength, maxLength));
+			} catch (Xeger.FailedRandomWalkException ex) {
+				// add a placeholder for the failed attempt
+				regexList.add(null);
 			}
+		}
+		return regexList;
+	}
+
+	private <T> void assertListEquals(List<T> firstRegexList, List<T> secondRegexList) {
+		assertEquals("size mismatch", firstRegexList.size(), secondRegexList.size());
+		for (int i = 0; i < firstRegexList.size(); i++) {
+			assertEquals("Index mismatch: " + i, firstRegexList.get(i), secondRegexList.get(i));
 		}
 	}
 
