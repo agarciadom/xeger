@@ -1,3 +1,5 @@
+[![Java CI](https://github.com/bluezio/xeger/actions/workflows/ci.yml/badge.svg)](https://github.com/bluezio/xeger/actions/workflows/ci.yml)
+
 This is a maintenance fork of the Xeger library. It is a Java library
 for generating strings that match a specific regular expression. The
 original version of Xeger is available from this address, but
