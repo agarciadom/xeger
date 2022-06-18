@@ -76,17 +76,14 @@ charexp ::=     <Unicode character>     (a single non-reserved character)
 Maven repository
 ---
 
-A binary build of this library is available from my Maven Bintray repository:
+A binary build of this library is available from the GitHub Package Registry:
 
 ```xml
 <repositories>
   <repository>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-    <id>bintray-bluezio-maven</id>
-    <name>bintray</name>
-    <url>https://dl.bintray.com/bluezio/maven</url>
+    <id>github</id>
+    <name>GitHub agarciadom Apache Maven Packages</name>
+    <url>https://maven.pkg.github.com/agarciadom/xeger</url>
   </repository>
 </repositories>
 ```
