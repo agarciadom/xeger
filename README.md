@@ -87,3 +87,5 @@ A binary build of this library is available from the GitHub Package Registry:
   </repository>
 </repositories>
 ```
+
+Please note that you will need to authenticate to GitHub to access this repository, as [documented here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry).
