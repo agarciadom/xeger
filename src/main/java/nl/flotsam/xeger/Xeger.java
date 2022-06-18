@@ -58,7 +58,9 @@ public class Xeger {
 
     /**
      * As {@link nl.flotsam.xeger.Xeger#Xeger(String, java.util.Random)}, creating a {@link java.util.Random} instance
-     * implicityly.
+     * implicitly.
+     *
+     * @param regex Regular expression to produce strings from.
      */
     public Xeger(String regex) {
         this(regex, new Random());
@@ -66,6 +68,8 @@ public class Xeger {
 
     /**
      * Generates a random String that is guaranteed to match the regular expression passed to the constructor.
+     *
+     * @return string generated from the regular expression.
      */
     public String generate() {
         StringBuilder builder = new StringBuilder();
@@ -88,6 +92,7 @@ public class Xeger {
      * @param maxLength Maximum length for the range.
      * @throws FailedRandomWalkException The minimum random walk length was not reached, or the maximum random walk
      * length was exceeded.
+     * @return Generated string from the bounded random walk.
      */
     public String generate(int minLength, int maxLength) throws FailedRandomWalkException {
         final StringBuilder builder = new StringBuilder();
