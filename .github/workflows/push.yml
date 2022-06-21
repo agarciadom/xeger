@@ -1,4 +1,4 @@
-name: Java CI
+name: Push to main repo
 
 on: [push, workflow_dispatch]
 
